@@ -4,6 +4,10 @@
 /build
 /tmp
 
+# EggJS specific
+/run
+/logs
+
 # Logs
 logs
 *.log
@@ -22,3 +26,7 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+# Test reports
+node_modules/.mochawesome-reports/
+

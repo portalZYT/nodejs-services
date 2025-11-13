@@ -1,0 +1,36 @@
+{
+  "name": "nodejs-services",
+  "version": "1.0.0",
+  "description": "Node.js API services using EggJS, NestJS, and NextJS frameworks",
+  "main": "index.js",
+  "scripts": {
+    "dev": "egg-bin dev",
+    "start": "egg-scripts start --daemon --title=egg-server-nodejs-services",
+    "stop": "egg-scripts stop --title=egg-server-nodejs-services",
+    "test": "egg-bin test",
+    "cov": "egg-bin cov",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [
+    "eggjs",
+    "nodejs",
+    "api",
+    "service"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "egg": "^3.31.0",
+    "egg-scripts": "^3.1.0"
+  },
+  "devDependencies": {
+    "egg-bin": "^6.13.0",
+    "egg-mock": "^5.15.2",
+    "eslint": "^8.57.1",
+    "eslint-config-egg": "^14.1.0"
+  }
+}
