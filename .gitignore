@@ -1,24 +1,28 @@
-# Nestjs specific
-/dist
-/node_modules
-/build
-/tmp
+logs/
+npm-debug.log
+yarn-error.log
+node_modules/
+*-lock.json
+*-lock.yaml
+yarn.lock
+coverage/
+.idea/
+run/
+.DS_Store
+*.sw*
+*.un~
+typings/
+.nyc_output/
+dist/
+# Temporary files
+*.tmp
+*.temp
 
-# Logs
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+# IDE files
+.vscode/settings.json
+.history/
 
-# dotenv environment variable files
-.env
-.env.development
-.env.test
-.env.production
-
-# temp directory
-.temp
-.tmp
+# OS generated files
+Thumbs.db
+.DS_Store?
+._*

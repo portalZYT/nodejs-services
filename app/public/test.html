@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel API 测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏨 Hotel API 测试页面</h1>
+    
+    <div class="test-section">
+        <h2>📋 API 文档链接</h2>
+        <p>
+            <a href="/swagger-ui.html" target="_blank">🔗 Swagger UI</a> | 
+            <a href="/swagger-doc" target="_blank">📄 Swagger JSON</a>
+        </p>
+    </div>
+
+    <div class="test-section">
+        <h2>👤 用户注册</h2>
+        <input type="text" id="reg-username" placeholder="用户名" value="testuser">
+        <input type="text" id="reg-mobile" placeholder="手机号" value="13800138000">
+        <input type="password" id="reg-password" placeholder="密码" value="123456">
+        <button onclick="testRegister()">注册</button>
+        <div id="reg-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔐 用户登录</h2>
+        <input type="text" id="login-username" placeholder="用户名" value="testuser">
+        <input type="password" id="login-password" placeholder="密码" value="123456">
+        <button onclick="testLogin()">登录</button>
+        <div id="login-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🚪 用户登出</h2>
+        <button onclick="testLogout()">登出</button>
+        <div id="logout-result" class="result"></div>
+    </div>
+
+    <script>
+        async function testRegister() {
+            const username = document.getElementById('reg-username').value;
+            const mobile = document.getElementById('reg-mobile').value;
+            const password = document.getElementById('reg-password').value;
+            
+            try {
+                const response = await fetch('/login/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, mobile, password })
+                });
+                
+                const result = await response.json();
+                document.getElementById('reg-result').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('reg-result').textContent = '错误: ' + error.message;
+            }
+        }
+
+        async function testLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                const response = await fetch('/login/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                document.getElementById('login-result').textContent = JSON.stringify(result, null, 2);
+                
+                // 保存token用于登出测试
+                if (result.success && result.data.token) {
+                    localStorage.setItem('token', result.data.token);
+                }
+            } catch (error) {
+                document.getElementById('login-result').textContent = '错误: ' + error.message;
+            }
+        }
+
+        async function testLogout() {
+            try {
+                const response = await fetch('/login/signout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                document.getElementById('logout-result').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('logout-result').textContent = '错误: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html> 
