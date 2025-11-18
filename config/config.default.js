@@ -54,7 +54,7 @@ module.exports = appInfo => {
     dialect: 'mysql',
     host: '127.0.0.1',
     port: '3306',
-    database: 'egg-sequelize-doc-default',
+    database: 'egg-sequelize-test',
     username: 'root',
     password: 'Youtian1994$$',
   }
@@ -72,7 +72,7 @@ module.exports = appInfo => {
   //       // 密码
   //       password: 'Youtian1994$$',
   //       // 数据库名
-  //       database: 'egg-sequelize-doc-default'
+  //       database: 'egg-sequelize-test'
   //     }
   //   },
   //   // 所有数据库配置的默认值
