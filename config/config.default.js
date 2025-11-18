@@ -101,7 +101,7 @@ module.exports = appInfo => {
     basePath: '/',
     apiInfo: {
       title: 'Hotel API',
-      description: '酒店管理系统API文档',
+      description: '系统API文档',
       version: '1.0.0',
     },
     schemes: ['http', 'https'],
