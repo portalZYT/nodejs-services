@@ -3,6 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const logger = require('./logger');
 
 // Target upstream base. Default to the host you mentioned.
 const TARGET_BASE_URL = process.env.TARGET_BASE_URL || 'https://api-adccrm-s.abbott.com.cn';
@@ -18,6 +19,14 @@ app.use((req, res, next) => {
   const acrh = req.headers['access-control-request-headers'];
   res.setHeader('Access-Control-Allow-Headers', acrh || 'Content-Type,Authorization');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
+
+  // Log incoming request basic info
+  try {
+    logger.info('incoming request', { method: req.method, url: req.originalUrl, ip: req.ip });
+  } catch (e) {
+    console.warn('logger failed', e);
+  }
+
   next();
 });
 
@@ -43,15 +52,48 @@ app.use(
       proxyRes.headers['access-control-allow-credentials'] = 'true';
       proxyRes.headers['access-control-allow-methods'] = 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS';
       proxyRes.headers['access-control-allow-headers'] = req.headers['access-control-request-headers'] || 'Content-Type,Authorization';
+
+      // Log upstream responses that look like errors (4xx/5xx)
+      try {
+        if (proxyRes.statusCode && proxyRes.statusCode >= 400) {
+          logger.error('upstream response error', {
+            method: req.method,
+            url: req.originalUrl,
+            target: TARGET_BASE_URL,
+            statusCode: proxyRes.statusCode
+          });
+        }
+      } catch (e) {
+        console.warn('logger failed', e);
+      }
     },
     onProxyReq: (proxyReq, req, res) => {
       // If body parser is used elsewhere and body is available, forward it.
       // In this setup we avoid body parsing so streams pass through directly.
     },
+    onError: (err, req, res) => {
+      try {
+        logger.error('proxy error', { message: err.message, code: err.code, method: req.method, url: req.originalUrl, target: TARGET_BASE_URL });
+      } catch (e) {
+        console.warn('logger failed', e);
+      }
+      if (!res.headersSent) {
+        res.status(502).json({ error: 'Bad gateway', details: err.message });
+      }
+    },
   })
 );
 
 app.listen(port, () => {
-  console.log(`Proxy server listening on ${port}`);
-  console.log(`Proxy prefix: ${PROXY_PREFIX} -> ${TARGET_BASE_URL}`);
+  logger.info(`Proxy server listening on ${port}`, { proxyPrefix: PROXY_PREFIX, target: TARGET_BASE_URL });
+});
+
+// Express error handler for unexpected errors during request processing
+app.use((err, req, res, next) => {
+  try {
+    logger.error('request processing error', { message: err.message, stack: err.stack, method: req.method, url: req.originalUrl });
+  } catch (e) {
+    console.warn('logger failed', e);
+  }
+  if (!res.headersSent) res.status(500).json({ error: 'Internal Server Error' });
 });
