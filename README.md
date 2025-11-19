@@ -1,9 +1,70 @@
-# nodejs-services
-This repository contains a collection of Node.js services designed for various applications. Each service is modular and can be used independently or as part of a larger system.
+# Node.js Proxy Service
 
-## Services Included
-Using EggJs framework: https://www.eggjs.org/zh-CN/
-分支如下格式: eggjs/dev-* ,主分支 为 eggjs/main
+Simple HTTP proxy service built with Node.js, Express and Axios.
 
-Using NestJs framework: https://docs.nestjs.com/  Chiness doc: https://www.nestjs.com.cn/
-分支如下格式: nestjs/dev-* ,主分支 为 nestjs/main
+Features
+- POST `/proxy` to forward requests to an upstream URL.
+- `PROXY_ALLOWLIST` env var to restrict allowed target hostnames (comma-separated).
+- Streams upstream responses through to clients.
+
+Quick start
+
+1. Install dependencies:
+
+```sh
+npm install
+```
+
+2. (Optional) Set an allowlist of hostnames to restrict targets:
+
+```sh
+export PROXY_ALLOWLIST=example.com,api.example.org
+```
+
+3. Run the server:
+
+```sh
+npm start
+```
+
+Examples
+
+Proxy to a fixed upstream
+
+This service can act as a pure proxy that forwards any incoming request to a fixed upstream base URL.
+
+By default the upstream base is `https://api-adccrm-s.abbott.com.cn`. You can change it with `TARGET_BASE_URL`.
+
+Example: GET proxy
+
+```sh
+# This will proxy to https://api-adccrm-s.abbott.com.cn/get
+curl -X GET http://localhost:3000/proxy/get
+```
+
+Example: POST proxy with JSON body
+
+```sh
+# This will proxy to https://api-adccrm-s.abbott.com.cn/post
+curl -X POST http://localhost:3000/proxy/post \
+  -H "Content-Type: application/json" \
+  -d '{"hello":"world"}'
+```
+
+Notes
+- Any HTTP method, headers, query string, and body are forwarded transparently.
+- The incoming path after `/proxy` is appended to the upstream base.
+- Configure via env vars:
+  - `TARGET_BASE_URL` (default: `https://api-adccrm-s.abbott.com.cn`)
+  - `PROXY_PREFIX` (default: `/proxy`)
+
+
+Health check
+
+```sh
+curl http://localhost:3000/health
+```
+
+Security notes
+- If you plan to expose this service publicly, set `PROXY_ALLOWLIST` to limit allowed targets.
+- Consider additional authentication, rate-limiting, and input validation for production use.
