@@ -26,3 +26,6 @@ dist/
 Thumbs.db
 .DS_Store?
 ._*
+typings/
+run/
+logs/
