@@ -10,3 +10,5 @@ npx sequelize db:migrate
 # npx sequelize db:migrate:undo
 
 # 可以通过 `db:migrate:undo:all` 回退到初始状态
+
+TODO: logs功能待完善 https://github.com/pinojs/pino
