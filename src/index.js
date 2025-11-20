@@ -1,3 +1,6 @@
+// Load environment variables from .env for local development
+try { require('dotenv').config(); } catch (e) { /* dotenv optional if not installed */ }
+
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
@@ -6,9 +9,9 @@ const port = process.env.PORT || 3000;
 const logger = require('./logger');
 
 // Target upstream base. Default to the host you mentioned.
-const TARGET_BASE_URL = process.env.TARGET_BASE_URL || 'https://api-adccrm-s.abbott.com.cn';
+const TARGET_BASE_URL = process.env.TARGET_BASE_URL;
 // Incoming requests starting with this prefix will be proxied to TARGET_BASE_URL
-const PROXY_PREFIX = process.env.PROXY_PREFIX || '/api';
+const PROXY_PREFIX = process.env.PROXY_PREFIX;
 
 // Basic CORS middleware: echo Origin and handle preflight requests
 app.use((req, res, next) => {

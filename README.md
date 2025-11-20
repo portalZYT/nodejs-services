@@ -15,15 +15,18 @@ Quick start
 npm install
 ```
 
-2. (Optional) Set an allowlist of hostnames to restrict targets:
+2. Configure environment (local development)
 
-```sh
-export PROXY_ALLOWLIST=example.com,api.example.org
-```
+- Create a `.env` file in the project root (an example `.env` is already provided). Key variables:
+  - `TARGET_BASE_URL` — upstream base URL (default in `.env`: `https://api-adccrm-s.abbott.com.cn`)
+  - `PROXY_PREFIX` — path prefix to proxy (default: `/api`)
+  - `PORT` — server port (default: `3000`)
+  - `LOG_LEVEL` — logging level for pino (default: `info`)
 
 3. Run the server:
 
 ```sh
+npm install
 npm start
 ```
 
