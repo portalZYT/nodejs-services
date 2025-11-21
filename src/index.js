@@ -9,9 +9,9 @@ const port = process.env.PORT || 3000;
 const logger = require('./logger');
 
 // Target upstream base. Default to the host you mentioned.
-const TARGET_BASE_URL = process.env.TARGET_BASE_URL;
+const TARGET_BASE_URL = process.env.TARGET_BASE_URL || 'http://localhost:8080';
 // Incoming requests starting with this prefix will be proxied to TARGET_BASE_URL
-const PROXY_PREFIX = process.env.PROXY_PREFIX;
+const PROXY_PREFIX = process.env.PROXY_PREFIX || '/api';
 
 // Basic CORS middleware: echo Origin and handle preflight requests
 app.use((req, res, next) => {
