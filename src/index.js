@@ -16,7 +16,7 @@ const PROXY_PREFIX = process.env.PROXY_PREFIX || '/api';
 // Basic CORS middleware: echo Origin and handle preflight requests
 app.use((req, res, next) => {
   const origin = req.headers.origin || '*';
-  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
   const acrh = req.headers['access-control-request-headers'];
@@ -51,7 +51,7 @@ app.use(
     onProxyRes: (proxyRes, req, res) => {
       // Ensure proxied responses include CORS headers
       const origin = req.headers.origin || '*';
-      proxyRes.headers['access-control-allow-origin'] = origin;
+      proxyRes.headers['access-control-allow-origin'] = '*';
       proxyRes.headers['access-control-allow-credentials'] = 'true';
       proxyRes.headers['access-control-allow-methods'] = 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS';
       proxyRes.headers['access-control-allow-headers'] = req.headers['access-control-request-headers'] || 'Content-Type,Authorization';
